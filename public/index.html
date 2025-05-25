@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paste Image and Text App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Paste an Image or Add Text</h1>
+    <p>Click anywhere in the box below and press Ctrl+V to paste an image.</p>
+    <div id="pasteArea" class="paste-area" tabindex="0">
+      <p>Paste your image here</p>
+    </div>
+    <div class="text-input">
+      <input type="text" id="textInput" placeholder="Enter text and press Enter or click Send">
+      <button id="sendText">Send</button>
+    </div>
+    <h2>Images</h2>
+    <div id="imageContainer" class="image-container"></div>
+    <h2>Texts</h2>
+    <div id="textContainer" class="text-container"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
