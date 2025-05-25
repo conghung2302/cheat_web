@@ -2,18 +2,19 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
+const cors = require('cors');
 const app = express();
 const port = 5500;
 
-// Cấu hình thư mục tĩnh để phục vụ file HTML, CSS, JS và ảnh
+app.use(cors());
+app.use(express.json()); // Thêm middleware để parse JSON
 app.use(express.static('public'));
 app.use('/images', express.static('images'));
 
 // Đảm bảo thư mục images tồn tại
 const imagesDir = path.join(__dirname, 'images');
 if (!fs.existsSync(imagesDir)) {
-    fs.mkdirSync(imagesDir);
+  fs.mkdirSync(imagesDir);
 }
 
 // Route để lưu đoạn text
@@ -77,6 +78,56 @@ app.get('/images', (req, res) => {
         const imageUrls = imageFiles.map(file => `/images/${file}`);
         res.json({ images: imageUrls });
     });
+});
+
+// Route để lấy danh sách text
+app.get('/texts', (req, res) => {
+  try {
+    const texts = JSON.parse(fs.readFileSync(textsFile));
+    res.json({ texts });
+  } catch (error) {
+    console.error('Error reading texts:', error);
+    res.status(500).json({ error: 'Unable to read texts' });
+  }
+});
+
+// Route để lưu đoạn text
+
+app.post('/text', (req, res) => {
+
+  try {
+
+    const { content } = req.body;
+
+    if (!content) {
+
+      return res.status(400).json({ error: 'Text content is required' });
+
+    }
+
+    const texts = JSON.parse(fs.readFileSync(textsFile));
+
+    const newText = {
+
+      content,
+
+      timestamp: new Date().toISOString(),
+
+    };
+
+    texts.push(newText);
+
+    fs.writeFileSync(textsFile, JSON.stringify(texts, null, 2));
+
+    res.json(newText);
+
+  } catch (error) {
+
+    console.error('Error saving text:', error);
+
+    res.status(500).json({ error: 'Server error during text save' });
+
+  }
 });
 
 
