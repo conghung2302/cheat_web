@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendTextButton = document.getElementById('sendText');
   const textContainer = document.getElementById('textContainer');
 
+  const downloadBtn = document.getElementById('downloadBtn');
   // Hàm hiển thị danh sách ảnh
   async function loadImages() {
     try {
@@ -46,7 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
     textItem.innerHTML = `<span>${new Date(text.timestamp).toLocaleString()}</span>: ${text.content}`;
     textContainer.appendChild(textItem);
   }
-
+  downloadBtn.addEventListener('click', function () {
+    // Gọi API download từ server
+    window.location.href = '/download';
+  });
   // Gọi khi trang được tải
   loadImages();
   loadTexts();

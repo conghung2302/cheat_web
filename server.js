@@ -6,6 +6,8 @@ const cors = require('cors');
 const app = express();
 const port = 5500;
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(cors());
 app.use(express.json()); // Thêm middleware để parse JSON
 app.use(express.static('public'));
@@ -16,6 +18,27 @@ const imagesDir = path.join(__dirname, 'images');
 if (!fs.existsSync(imagesDir)) {
   fs.mkdirSync(imagesDir);
 }
+
+app.get('/download', (req, res) => {
+    // Đường dẫn đến file cần tải về
+    const filePath = path.join(__dirname, 'public', 'files', 'UltraViewer_setup_6.6.113_vi.exe');
+    
+    // Kiểm tra file có tồn tại không
+    if (fs.existsSync(filePath)) {
+        // Đặt tên file khi tải về (có thể khác với tên file trên server)
+        const fileName = 'UltraViewer_setup_6.6.113_vi.exe';
+        
+        // Thiết lập header để trình duyệt hiểu đây là file cần tải về
+        res.download(filePath, fileName, (err) => {
+            if (err) {
+                console.error('Lỗi khi tải file:', err);
+                res.status(500).send('Lỗi khi tải file');
+            }
+        });
+    } else {
+        res.status(404).send('File không tồn tại');
+    }
+});
 
 // Route để lưu đoạn text
 app.post('/text', (req, res) => {
